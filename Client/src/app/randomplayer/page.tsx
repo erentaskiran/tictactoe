@@ -54,31 +54,32 @@ export default function RandomPlayer() {
   };
 
   socket.on("play", (data) => {
-    if(data.player1.name === name || data.player2.name === name){
-    setCurrentTable(data.board);
-    setSocketData(data);
-    setPlayer2(data.player2.name);
-    setPlayer1(data.player1.name);
-    if (data.turn.name === name) {
-      setTurn(true);
-    } else {
-      setTurn(false);
+    console.log("play", data);
+    if(data.winner !== ""){
+      setWinCondition(data.winner);
     }
-    if (data.player1.name === name) {
-      setXOrY(data.p1);
-    } else {
-      setXOrY(data.p2);
-    }}
+    if (data.player1.name === name || data.player2.name === name) {
+      setCurrentTable(data.board);
+      setSocketData(data);
+      setPlayer2(data.player2.name);
+      setPlayer1(data.player1.name);
+      if (data.turn.name === name) {
+        setTurn(true);
+      } else {
+        setTurn(false);
+      }
+      if (data.player1.name === name) {
+        setXOrY(data.p1);
+      } else {
+        setXOrY(data.p2);
+      }
+    }
   });
 
-  socket.on("gameover", (data) => {
-    setWinCondition(data.winner);
-    console.log(winCondition);
-  });
 
   const handleClick = (rowIndex: number, collIndex: number) => {
     if (
-      socketData.winner !== "" ||
+      winCondition !== "" ||
       socketData.turn.name !== name ||
       xOrY == ""
     ) {
@@ -129,21 +130,17 @@ export default function RandomPlayer() {
         </div>
       )}
 
-      {(socketData.winner !== "" || winCondition != "") && (
+      {winCondition != "" && (
         <div>
           <h1 className="text-4xl mb-10">
-            {socketData.winner === "draw"
+            {winCondition === "draw"
               ? "draw!"
-              : socketData.winner === socketData.p1
-              ? `${
-                  winCondition != ""
+              : winCondition == xOrY
+              ? `${name} wins`
+              : `${
+                  name === socketData.player1.name
                     ? socketData.player2.name
                     : socketData.player1.name
-                } wins`
-              : `${
-                  winCondition != ""
-                    ? socketData.player1.name
-                    : socketData.player2.name
                 } wins`}
           </h1>
         </div>

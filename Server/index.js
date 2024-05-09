@@ -43,7 +43,6 @@ io.on("connection", (socket) => {
     console.log("join", data);
     var tmp = { id: socket.id, name: data.name };
     console.log(tmp);
-    isSaving = true;
     set(ref(database,`users/${playerCount++}`), tmp)
       .then(() => {
         console.log("Saved successfully");
@@ -91,25 +90,35 @@ io.on("connection", (socket) => {
 
   socket.on("play", (data) => {
     console.log("play", data);
+    io.emit("play", data);
     if (checkWinner(data.board) != "") {
-      data.winner = checkWinner(data.board);
+      var winner = checkWinner(data.board);
+      
+      data.winner = winner;
       console.log("winner", data.winner);
-      socket.emit("gameover", data.winner);
+      io.emit("play", data);
+      
     }
-    socket.broadcast.emit("play", data);
-  });
-
-  socket.on("gameover", (data) => {
-    console.log("gameover", data);
-    socket.broadcast.emit("gameover", data);
   });
 });
 
 httpServer.listen(8080);
 
 function checkWinner(currentTable) {
-  var countX = 0;
-  var countY = 0;
+  let countPlays = 0;
+  let countEmptyCells = 0;
+  for (let i = 0; i < 3; i++) {
+    for(let j = 0; j < 3; j++) {
+      if (currentTable[i][j] !== "") {
+        countPlays++;
+      } else {
+        countEmptyCells++;
+      }
+    }
+  }
+  if (countPlays === 9 && countEmptyCells === 0) {
+    return "draw";
+  }
   for (let i = 0; i < 3; i++) {
     if (
       currentTable[i][0] === currentTable[i][1] &&
@@ -118,7 +127,6 @@ function checkWinner(currentTable) {
     ) {
       return currentTable[i][0];
     }
-    countX++;
   }
   for (let j = 0; j < 3; j++) {
     if (
@@ -128,8 +136,8 @@ function checkWinner(currentTable) {
     ) {
       return currentTable[0][j];
     }
-    countY++;
   }
+  
   if (
     currentTable[0][0] === currentTable[1][1] &&
     currentTable[1][1] === currentTable[2][2] &&
@@ -144,8 +152,6 @@ function checkWinner(currentTable) {
   ) {
     return currentTable[0][2];
   }
-  if (countX * countY === 0) {
-    return "draw";
-  }
+  
   return "";
 }
