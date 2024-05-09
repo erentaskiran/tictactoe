@@ -54,6 +54,7 @@ export default function RandomPlayer() {
   };
 
   socket.on("play", (data) => {
+    if(data.player1.name === name || data.player2.name === name){
     setCurrentTable(data.board);
     setSocketData(data);
     setPlayer2(data.player2.name);
@@ -67,7 +68,7 @@ export default function RandomPlayer() {
       setXOrY(data.p1);
     } else {
       setXOrY(data.p2);
-    }
+    }}
   });
 
   socket.on("gameover", (data) => {
