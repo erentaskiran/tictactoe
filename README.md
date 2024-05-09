@@ -8,8 +8,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-- Node.js
-- npm
+- [Node.js](https://nodejs.org/): 
+
+- [npm](https://www.npmjs.com/): 
+
 
 ## Environment Variables
 
