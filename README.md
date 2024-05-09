@@ -1,6 +1,7 @@
 # TicTacToe
 
-This is a real-time multiplayer game built with [Next.js](https://nextjs.org/) on the client side and Node.js with [Socket.IO](https://socket.io/) on the server side. The game state is managed using Firebase.
+This is a real-time multiplayer game built with [Next.js](https://nextjs.org/) on the client side and Node.js with [Socket.IO](https://socket.io/) on the server side. The game state is managed using [Firebase](https://firebase.google.com).
+
 
 ## Getting Started
 
@@ -61,7 +62,3 @@ node index.js
 
 Open http://localhost:3000 with your browser to see the result.
 
-# Built With
-[Next.js](https://nextjs.org/)
-[Socket.IO](https://socket.io/)
-[Firebase](https://firebase.google.com)

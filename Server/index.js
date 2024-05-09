@@ -36,8 +36,6 @@ const board = [
 ];
 
 var playerCount = 0;
-const usersRef = ref(database, `users/${playerCount}`);
-var isSaving = false;
 io.on("connection", (socket) => {
   console.log(`A client connected with id: ${socket.id}`);
 
@@ -55,21 +53,15 @@ io.on("connection", (socket) => {
             .then((snapshot) => {
               if (snapshot.exists()) {
                 players.push(snapshot.val());
-                console.log("players", snapshot.val());
-                console.log("pushtan sonra", players);
                 playerCount--;
                 remove(ref(database, `users/0`));
               }
-
             })
             .then(() => {
               get(ref(database, `users/1`)).then((snapshot) => {
                 if (snapshot.exists()) {
                   players.push(snapshot.val());
-                  console.log("players", snapshot.val());
-                  console.log("pushtan sonra", players);
                   if (players.length >= 2) {
-                    console.log("girdi");
                     const player1 = players[0];
                     const player2 = players[1];
                     io.emit("play", {
@@ -90,7 +82,6 @@ io.on("connection", (socket) => {
                 playerCount--;
               });
             })
-          console.log(players);
         }
       })
       .catch((error) => {
