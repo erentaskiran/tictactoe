@@ -72,7 +72,6 @@ io.on("connection", (socket) => {
                       p1: "X",
                       p2: "O",
                       board: board,
-                      winner: "",
                     });
                   } else {
                     console.log("No data available");

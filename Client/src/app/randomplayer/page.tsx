@@ -10,7 +10,6 @@ type Data = {
   p1: string;
   p2: string;
   board: string[][];
-  winner: string;
 };
 const socket = io("http://localhost:8080");
 socket.on("connect", () => {
@@ -41,7 +40,6 @@ export default function RandomPlayer() {
       ["", "", ""],
       ["", "", ""],
     ],
-    winner: "",
   });
 
   const handleJoin = () => {
@@ -172,7 +170,6 @@ export default function RandomPlayer() {
 
         {!loading &&
           winCondition == "" &&
-          socketData.winner == "" &&
           xOrY != "" && (
             <h2 className="text-2xl mb-12">
               {turn === true ? xOrY : xOrY == "X" ? "O" : "X"}&apos;s turn
@@ -189,7 +186,7 @@ export default function RandomPlayer() {
           </div>
         )}
 
-        {!loading && (winCondition != "" || socketData.winner != "") && (
+        {!loading && winCondition != ""  && (
           <button onClick={handleNewGame} className="text-2xl p-4 mb-12">
             New game
           </button>
