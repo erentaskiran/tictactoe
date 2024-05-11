@@ -1,10 +1,10 @@
-import { createServer } from "http";
+import  express  from "express";
+import http from 'http';
 import { Server } from "socket.io";
 import { getDatabase, ref, set, get, remove } from "firebase/database";
 import { initializeApp } from "firebase/app";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
-
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -17,16 +17,18 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
-const httpServer = createServer();
-const io = new Server(httpServer, {
+
+const app = express();
+const server = http.createServer(app); 
+
+const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-  },
+    origin: "http://localhost:3000", 
+    methods: ["GET", "POST"] 
+  }
 });
-
 const database = getDatabase();
 
 const board = [
@@ -43,7 +45,7 @@ io.on("connection", (socket) => {
     console.log("join", data);
     var tmp = { id: socket.id, name: data.name };
     console.log(tmp);
-    set(ref(database,`users/${playerCount++}`), tmp)
+    set(ref(database, `users/${playerCount++}`), tmp)
       .then(() => {
         console.log("Saved successfully");
         if (playerCount >= 2) {
@@ -80,7 +82,7 @@ io.on("connection", (socket) => {
 
                 playerCount--;
               });
-            })
+            });
         }
       })
       .catch((error) => {
@@ -90,25 +92,25 @@ io.on("connection", (socket) => {
 
   socket.on("play", (data) => {
     console.log("play", data);
-    io.emit("play", data);
     if (checkWinner(data.board) != "") {
-      var winner = checkWinner(data.board);
-      
-      data.winner = winner;
-      console.log("winner", data.winner);
-      io.emit("play", data);
-      
+      const tmp = checkWinner(data.board);
+      let winner = tmp === "draw" ? "draw" : tmp === "X" ? data.player1.name : data.player2.name;
+      console.log("winner", winner);
+      io.emit("gameover", { winner: winner });
     }
+    io.emit("play", data);
   });
 });
 
-httpServer.listen(8080);
+server.listen(8080, () => {
+  console.log('Server is running on port 8080');
+});
 
 function checkWinner(currentTable) {
   let countPlays = 0;
   let countEmptyCells = 0;
   for (let i = 0; i < 3; i++) {
-    for(let j = 0; j < 3; j++) {
+    for (let j = 0; j < 3; j++) {
       if (currentTable[i][j] !== "") {
         countPlays++;
       } else {
@@ -137,7 +139,7 @@ function checkWinner(currentTable) {
       return currentTable[0][j];
     }
   }
-  
+
   if (
     currentTable[0][0] === currentTable[1][1] &&
     currentTable[1][1] === currentTable[2][2] &&
@@ -152,6 +154,6 @@ function checkWinner(currentTable) {
   ) {
     return currentTable[0][2];
   }
-  
+
   return "";
 }

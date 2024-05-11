@@ -10,12 +10,12 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-black text-slate-300">
-      <div className="flex flex-col items-center gap-24 -mt-6">
-        <div className="text-4xl">Tic Tac Toe</div>
-        <div className="text-xl">Select Game Mode</div>
+    <div className="h-screen flex flex-col justify-center items-center bg-black text-slate-400">
+      <div className="flex flex-col items-center gap-12 -mt-6">
+        <div className=" text-6xl">Tic Tac Toe</div>
+        <div className="text-3xl">Select Game Mode</div>
       </div>
-      <div className="flex gap-8 mt-8">
+      <div className="flex items-center justify-center gap-8 mt-8">
         <div
           onClick={handleLocalGameClick}
           className="cursor-pointer    hover:text-slate-500"
