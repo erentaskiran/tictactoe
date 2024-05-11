@@ -12,7 +12,7 @@ type Data = {
   board: string[][];
   winner: string;
 };
-const socket = io("http://localhost:8080");
+const socket = io("server-erentaskiran-erens-projects-b19c30d4.vercel.app:3000");
 socket.on("connect", () => {
   console.log("connected");
 });

@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "build": "babel index.js -o public/dist/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,5 +20,8 @@
     "socket.io": "^4.7.5",
     "utf-8-validate": "^5.0.10",
     "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0"
   }
 }
