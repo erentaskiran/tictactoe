@@ -14,7 +14,20 @@ export default function Localgame() {
   const [winCondition, setWinCondition] = useState("");
 
   function checkWinner() {
-    let count = 0;
+    let countPlays = 0;
+    let countEmptyCells = 0;
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (currentTable[i][j] !== "") {
+          countPlays++;
+        } else {
+          countEmptyCells++;
+        }
+      }
+    }
+    if (countPlays === 9 && countEmptyCells === 0) {
+      return "draw";
+    }
     for (let i = 0; i < 3; i++) {
       if (
         currentTable[i][0] === currentTable[i][1] &&
@@ -23,21 +36,17 @@ export default function Localgame() {
       ) {
         return currentTable[i][0];
       }
-      for (let j = 0; j < 3; j++) {
-        if (currentTable[i][j] === "") {
-          count++;
-          continue;
-        }
-        if (
-          currentTable[0][j] === currentTable[1][j] &&
-          currentTable[1][j] === currentTable[2][j] &&
-          currentTable[0][j] !== ""
-        ) {
-          return currentTable[0][j];
-        }
+    }
+    for (let j = 0; j < 3; j++) {
+      if (
+        currentTable[0][j] === currentTable[1][j] &&
+        currentTable[1][j] === currentTable[2][j] &&
+        currentTable[0][j] !== ""
+      ) {
+        return currentTable[0][j];
       }
     }
-
+  
     if (
       currentTable[0][0] === currentTable[1][1] &&
       currentTable[1][1] === currentTable[2][2] &&
@@ -52,11 +61,10 @@ export default function Localgame() {
     ) {
       return currentTable[0][2];
     }
-    if (count === 0) {
-      return "draw";
-    }
+  
     return "";
   }
+  
 
   function handleClick(rowIndex: number, collIndex: number) {
     if (currentTable[rowIndex][collIndex] !== "" || turn !== currentPlayer) {

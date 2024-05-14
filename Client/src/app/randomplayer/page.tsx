@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, use } from "react";
+import { useState } from "react";
 import { io } from "socket.io-client";
 import { Grid } from "react-loader-spinner";
 
@@ -11,6 +11,11 @@ type Data = {
   p2: string;
   board: string[][];
 };
+
+type gameOver = {
+  winner: string;
+};
+
 const socket = io("http://localhost:8080");
 socket.on("connect", () => {
   console.log("connected");
@@ -57,12 +62,12 @@ export default function RandomPlayer() {
     setLoading(true);
   };
 
-  socket.on("gameover", (data) => {
+  socket.on("gameover", (data: gameOver) => {
     console.log("gameover", data);
     setWinCondition(data.winner);
   });
 
-  socket.on("play", (data) => {
+  socket.on("play", (data: Data) => {
     if (data.player1.name === name || data.player2.name === name) {
       console.log("play", data);
       setLoading(false);
@@ -145,7 +150,6 @@ export default function RandomPlayer() {
             color="#4b5563"
             ariaLabel="grid-loading"
             radius="12.5"
-            wrapperStyle={{}}
             wrapperClass="grid-wrapper"
           />
         )}
@@ -168,13 +172,11 @@ export default function RandomPlayer() {
           </div>
         )}
 
-        {!loading &&
-          winCondition == "" &&
-          xOrY != "" && (
-            <h2 className="text-2xl mb-12">
-              {turn === true ? xOrY : xOrY == "X" ? "O" : "X"}&apos;s turn
-            </h2>
-          )}
+        {!loading && winCondition == "" && xOrY != "" && (
+          <h2 className="text-2xl mb-12">
+            {turn === true ? xOrY : xOrY == "X" ? "O" : "X"}&apos;s turn
+          </h2>
+        )}
 
         {!loading && winCondition != "" && (
           <div>
@@ -186,7 +188,7 @@ export default function RandomPlayer() {
           </div>
         )}
 
-        {!loading && winCondition != ""  && (
+        {!loading && winCondition != "" && (
           <button onClick={handleNewGame} className="text-2xl p-4 mb-12">
             New game
           </button>
